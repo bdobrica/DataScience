@@ -20,4 +20,4 @@ source ~/venvs/opencv-python/bin/activate
 deactivate
 
 ## Add the virtual environment to jupyter notebook
-python -m ipykernel install --user --name=python-opencv
+python3 -m ipykernel install --user --name=python-opencv
