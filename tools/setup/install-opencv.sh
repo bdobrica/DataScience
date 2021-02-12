@@ -18,7 +18,7 @@ sudo apt-get install -y libssl-dev libffi-dev
 sudo apt-get install -y python3-dev python3-picamera
 
 ## Activate the opencv-python virtual environment
-source ~/venvs/python-opencv/bin/activate
+source ~/.venvs/python-opencv/bin/activate
 ## Install the OpenCV library. This specific version is the only one I was able to quickly install
 pip3 install opencv-contrib-python==4.1.0.25
 ## Install matplotlib which will help in displaying the images

@@ -15,7 +15,7 @@ mkdir ~/.venvs
 python3 -m venv ~/.venvs/python-opencv
 
 ## How to use a virtual environment: this will activate the environment
-source ~/venvs/opencv-python/bin/activate
+source ~/.venvs/python-opencv/bin/activate
 ## This will deactivate the environment
 deactivate
 
