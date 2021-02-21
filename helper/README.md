@@ -10,7 +10,7 @@ If you don't have a smart router that will tell you what are the new connected d
 
 ```powershell
 PS C:\Users\bdobr> $ping = New-Object System.Net.NetworkInformation.Ping
-PS C:\Users\bdobr> $ip_address = (get-netadapter | get-netipaddress |? { $_.InterfaceAlias -eq 'WiFi' -and $_.AddressFamily -eq 'IPv4' }).ipaddress
+PS C:\Users\bdobr> $ip_address = (get-netadapter | get-netipaddress |? { $_.InterfaceAlias -eq 'Wi-Fi' -and $_.AddressFamily -eq 'IPv4' }).ipaddress
 PS C:\Users\bdobr> $ip_prefix = $ip_address.split('.')[0..2]-join('.')
 PS C:\Users\bdobr> 1..254 | % { $ping.send("$ip_prefix.$_", 200) | Where-Object { $_.status -eq "Success" } | Select-Object -Property address, status }
 ```
