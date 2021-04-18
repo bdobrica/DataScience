@@ -11,13 +11,8 @@ sudo python3 -m pip install -U pip numpy notebook
 
 ## Create a hidden folder in the pi home directory to store the virtual environments
 mkdir ~/.venvs
-## Create a virtual environment for OpenCV
-python3 -m venv ~/.venvs/python-opencv
 
-## How to use a virtual environment: this will activate the environment
-source ~/.venvs/python-opencv/bin/activate
-## This will deactivate the environment
-deactivate
-
-## Add the virtual environment to jupyter notebook
-python3 -m ipykernel install --user --name=python-opencv
+SWD=$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+chmod +x ${SWD}/*.sh
+DIR=${SWD%/*}
+chmod +x ${DIR}/*.sh
