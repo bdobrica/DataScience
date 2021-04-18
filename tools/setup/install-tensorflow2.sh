@@ -49,3 +49,9 @@ if [ "${ADDED_ENV}" == "yes" ]; then
 	python3 -m ipykernel install --user --name=python-tf2
 fi
 
+## Fix the Jupyer Notebook problem with VENVs
+SWD=$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+chmod +x ${SWD}/*.sh
+DIR=${SWD%/*}
+chmod +x ${DIR}/*.sh
+${DIR}/fix-venv.sh
