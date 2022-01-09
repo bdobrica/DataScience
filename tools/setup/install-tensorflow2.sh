@@ -35,7 +35,7 @@ pip3 install tensorflow-2.2.0-cp37-cp37m-linux_armv7l.whl
 ## And remove it, to not waste space
 rm tensorflow-2.2.0-cp37-cp37m-linux_armv7l.whl
 ## Install the OpenCV library. This specific version is the only one I was able to quickly install
-pip3 install opencv-contrib-python==4.1.0.25
+pip3 install opencv-contrib-python==4.4.0.46
 ## Install matplotlib which will help in displaying the images
 pip3 install matplotlib
 ## Install dlib which will help with detecting face features
