@@ -69,7 +69,7 @@ class SecurityCamDaemon(Daemon):
             del app
             del camera
             # then wait, and respawn
-            sleep(int(app_config.main.respawn))
+            time.sleep(int(app_config.main.respawn))
             
 if __name__ == '__main__':
     chroot = Path(__file__).absolute().parent
