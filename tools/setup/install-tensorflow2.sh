@@ -23,7 +23,7 @@ cd Python-3.7.14
 make -j 4
 sudo make altinstall
 cd "${CURRENT_FOLDER}"
-rm -Rf Python-3.7.14
+rm -Rf Python-3.7.14*
 
 ## Create a python-tf virtual environment
 if [ ! -d ~/.venvs/python-tf2 ]; then
