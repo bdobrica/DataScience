@@ -14,6 +14,14 @@ sudo apt-get -y install libdb5.3-dev libgdbm-dev libsqlite3-dev
 sudo apt-get -y install libssl-dev libffi-dev
 sudo apt-get -y install libbz2-dev libexpat1-dev liblzma-dev zlib1g-dev
 
+sudo apt-get -y install python3-scipy
+
+## Increase SWAP
+sudo /bin/dd if=/dev/zero of=/var/swap.1 bs=1M count=1024
+sudo /sbin/mkswap /var/swap.1
+sudo chmod 600 /var/swap.1
+sudo /sbin/swapon /var/swap.1
+
 ## Install Python3.7
 wget https://www.python.org/ftp/python/3.7.14/Python-3.7.14.tgz
 tar xzf Python-3.7.14.tgz
@@ -24,6 +32,9 @@ make -j 4
 sudo make altinstall
 cd "${CURRENT_FOLDER}"
 rm -Rf Python-3.7.14*
+
+## Update to the latest PIP for Python3.7
+python3.7 -m pip install -U pip
 
 ## Create a python-tf virtual environment
 if [ ! -d ~/.venvs/python-tf2 ]; then
@@ -37,13 +48,25 @@ source ~/.venvs/python-tf2/bin/activate
 pip3 uninstall tensorflow
 
 ## Install Keras tools (keras is a high-level tensorflow wrapper)
-pip3 install numpy
+pip3 install numpy==1.18.5
 pip3 install keras_applications==1.0.8 --no-deps
-pip3 install keras_preprocessing==1.1.0 --no-deps
+pip3 install keras_preprocessing==1.1.1 --no-deps
 pip3 install six wheel mock
 pip3 install pybind11
 pip3 install h5py==2.10.0
 pip3 install --upgrade setuptools
+pip3 install Cython
+## ScyPi needs to be compiled manually
+wget https://github.com/scipy/scipy/archive/v1.4.1.tar.gz -O scipy-1.4.1.tar.gz
+tar xzf scipy-v1.4.1.tar.gz
+CURRENT_FOLDER=$(pwd)
+cd scipy-1.4.1
+FFLAGS="-fallow-argument-mismatch" python3 setup.py build
+FFLAGS="-fallow-argument-mismatch" python3 setup.py install
+sudo swapoff /var/swap.1
+sudo rm /var/swap.1
+cd "${CURRENT_FOLDER}"
+rm -Rf scipy-1.4.1*
 ## This is a tool for downloading files from Google Drive
 pip3 install gdown
 ## Needed to download the 2.2.0 version of TensorFlow
@@ -58,9 +81,16 @@ pip3 install opencv-contrib-python-headless==4.6.0.66
 pip3 install matplotlib
 ## Install dlib which will help with detecting face features
 pip3 install dlib
+## Install ipykernel
+pip3 install ipykernel
 
 ## Deactivate the python-tf2 virtual environment
 deactivate
+
+## Deactivate SWAP
+sudo /sbin/swapoff /var/swap.1
+sudo rm /var/swap.1
+
 
 ## Add the virtual environment to jupyter notebook
 if [ "${ADDED_ENV}" == "yes" ]; then

@@ -1,6 +1,19 @@
 # DataScience
 
- The repository for the data-science course.
+The repository for the data-science course.
+
+# Install Notes
+
+Run the scripts from tools/setup starting with install-first.sh.
+In order to add Jupyter at startup, edit `/etc/rc.local` and append before `exit 0` the following:
+
+```sh
+su pi -c "/home/pi/DataScience/tools/run-jupyter.sh"
+```
+
+# Note
+
+The repository was updated to use the Raspberry Pi OS 64-bit version.
 
 # Copyright (C) 2021, 2022 Pro-Youth
 
