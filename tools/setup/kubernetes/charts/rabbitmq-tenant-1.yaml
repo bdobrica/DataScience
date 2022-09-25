@@ -1,0 +1,14 @@
+kind: Namespace
+apiVersion: v1
+metadata:
+    name: rabbitmq-tenant-1
+    labels:
+      name: rabbitmq-instance
+
+apiVersion: rabbitmq.com/v1beta1
+kind: RabbitmqCluster
+metadata:
+    namespace: rabbitmq-tenant-1
+    name: rabbitmq-tenant-1
+    labels:
+      name: rabbitmq-instance
