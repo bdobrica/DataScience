@@ -20,6 +20,11 @@ logger = logging.getLogger(Path(__file__).stem)
 
 
 def read_serial_once(df: pd.DataFrame) -> pd.DataFrame:
+    """
+    Read data from serial port and append it to the dataframe passed as argument.
+    :param df: Dataframe to append data to
+    :return: Dataframe with new data (same instance as passed as argument)
+    """
     if not SERIAL_PORT.exists():
         logger.warning(f"Serial port {SERIAL_PORT} does not exist")
         return df
@@ -37,6 +42,11 @@ def read_serial_once(df: pd.DataFrame) -> pd.DataFrame:
 
 
 def read_serial_batch(path: Path, batch_length: int) -> None:
+    """
+    Read data from serial port and write it to a CSV file.
+    :param path: Path to write CSV file to
+    :param batch_length: Number of records to read from serial port
+    """
     df = pd.DataFrame(
         columns=[
             "datetime",
@@ -65,6 +75,7 @@ def read_serial_batch(path: Path, batch_length: int) -> None:
 
 
 def parse_args(args: list) -> argparse.Namespace:
+    """Parse command line arguments"""
     parser = argparse.ArgumentParser(
         prog=SCRIPT_NAME,
         description="Read data from Arduino serial port",
@@ -98,10 +109,12 @@ def parse_args(args: list) -> argparse.Namespace:
 
 
 def signal_parent() -> None:
+    """Send signal to parent process when exiting so that it knows we are done"""
     os.kill(os.getppid(), signal.SIGUSR1)
 
 
 def main(args: list = None) -> None:
+    """Main function"""
     atexit.register(signal_parent)
     args = parse_args(args)
     while True:

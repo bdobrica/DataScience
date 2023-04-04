@@ -12,6 +12,7 @@ children_pids = []
 
 
 def parse_args(args: list) -> argparse.Namespace:
+    """Parse command line arguments"""
     parser = argparse.ArgumentParser(
         prog=SCRIPT_NAME,
         description="Read data from Arduino serial port in batches and upload it to Minio",
@@ -59,6 +60,7 @@ def parse_args(args: list) -> argparse.Namespace:
 
 
 def graceful_exit() -> None:
+    """Gracefully exit all child processes when exiting"""
     for child_pid in children_pids:
         try:
             os.kill(child_pid, signal.SIGQUIT)
@@ -67,11 +69,19 @@ def graceful_exit() -> None:
 
 
 def handle_signal(signum: int, frame: types.FrameType) -> None:
+    """
+    Handle signals received from child processes. When a child process exits,
+    it sends a signal to the parent process and the parent process exits killing
+    all the child processes.
+    :param signum: Signal number (not used)
+    :param frame: Current stack frame (not used)
+    """
     graceful_exit()
     exit(0)
 
 
 def main(args: list = None) -> None:
+    """Main function"""
     args = parse_args(args)
     atexit.register(graceful_exit)
     signal.signal(signal.SIGUSR1, handle_signal)

@@ -2,6 +2,7 @@
 import argparse
 import atexit
 import json
+import logging
 import os
 import signal
 from pathlib import Path
@@ -14,10 +15,12 @@ from flask import Flask, render_template, request
 SCRIPT_NAME = Path(__file__).stem
 DEFAULT_FEATURE = "temperature_1_value"
 
+logger = logging.getLogger(SCRIPT_NAME)
 app = Flask(SCRIPT_NAME)
 
 
 def parse_args(args: list) -> argparse.Namespace:
+    """Parse command line arguments"""
     script_name = Path(__file__).stem
     parser = argparse.ArgumentParser(
         prog=script_name,
@@ -42,7 +45,8 @@ def parse_args(args: list) -> argparse.Namespace:
     return args
 
 
-def get_data(selected: list) -> pd.DataFrame:
+def get_data() -> pd.DataFrame:
+    """Read all CSV files from the input path and return a DataFrame"""
     df = pd.concat([pd.read_csv(csv_path) for csv_path in app.config["input_path"].glob("*.csv")])
     df.sort_values(by="datetime", inplace=True)
     return df
@@ -51,7 +55,7 @@ def get_data(selected: list) -> pd.DataFrame:
 @app.route("/")
 def index():
     selected = [DEFAULT_FEATURE]
-    df = get_data(selected)
+    df = get_data()
     fig = px.line(df, x="datetime", y=selected)
     graph = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
     return render_template(
@@ -64,18 +68,21 @@ def index():
 @app.route("/data")
 def data():
     selected = request.args.getlist("features[]")
-    print(selected)
-    df = get_data(selected)
+    logger.info(f"Selected features: {selected}")
+    df = get_data()
+    logger.info(f"Found {len(df)} data points")
     fig = px.line(df, x="datetime", y=selected)
     graph = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
     return graph
 
 
 def signal_parent() -> None:
+    """Send a signal to the parent process to indicate that the webserver has terminated"""
     os.kill(os.getppid(), signal.SIGUSR1)
 
 
 def main(args: list = None) -> None:
+    """Start the webserver"""
     atexit.register(signal_parent)
     args = parse_args(args)
     app.config["input_path"] = args.input_path
