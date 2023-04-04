@@ -1,0 +1,52 @@
+<!doctype html>
+<html>
+  <head>
+    <style type="text/css">
+      .lds-hourglass { display: inline-block; position: relative; width: 80px; height: 80px; }
+      .lds-hourglass:after { content: " "; display: block; border-radius: 50%; width: 0; height: 0; margin: 8px; box-sizing: border-box; border: 32px solid #2a52be; border-color: #2a52be transparent #2a52be transparent; animation: lds-hourglass 1.2s infinite; }
+      @keyframes lds-hourglass {
+        0% { transform: rotate(0); animation-timing-function: cubic-bezier(0.55, 0.055, 0.675, 0.19); }
+        50% { transform: rotate(900deg); animation-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1); }
+        100% { transform: rotate(1800deg); }
+      }
+      h1 { text-align: center; }
+      .features { text-align: center; }
+      .loading { text-align: center; }
+    </style>
+    <title>Weather Data</title>
+  </head>
+  <body>
+    <h1>Weather Data</h1>
+      <div id='chart' class='chart'></div>
+      <div id="features" class="features">
+      {% for parameter, checked in parameters.items() -%}
+        <input type="checkbox" id="{{parameter}}" name="feature" value="{{parameter}}"
+	  {% if checked %}
+          checked
+          {% endif %}
+	>
+	<label for="{{parameter}}">{{parameter}}</label>
+      {% endfor %}
+      </div>
+      <div class="loading"><div class="lds-hourglass"></div></div>
+
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+      <script src='https://cdn.plot.ly/plotly-latest.min.js'></script>
+      <script type='text/javascript'>
+	$('input[name="feature"]').change(function(){
+          var features = $('input[name="feature"]:checked').map(function(){return $(this).val()}).get();
+          if (!features) return;
+          $('.loading').show();
+
+          $.getJSON({
+            url: "/data",
+            data: {"features": features},
+            success: function(graphs){Plotly.newPlot("chart", graphs, {}); $('.loading').hide()}
+          });
+        });
+        var graphs = {{graph | safe}};
+        Plotly.newPlot('chart', graphs, {});
+        $('.loading').hide();
+      </script>
+  </body>
+</html>

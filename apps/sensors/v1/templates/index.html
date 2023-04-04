@@ -1,0 +1,13 @@
+<!doctype html>
+<html>
+  <body>
+    <h1>Temperature Chart</h1>
+      <div id='chart' class='chart'></div>
+      
+      <script src='https://cdn.plot.ly/plotly-latest.min.js'></script>
+      <script type='text/javascript'>
+        var graphs = {{graph | safe}};
+        Plotly.plot('chart',graphs,{});
+      </script>
+  </body>
+</html>

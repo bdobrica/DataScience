@@ -1,0 +1,4 @@
+pyserial
+pandas
+flask
+plotly
