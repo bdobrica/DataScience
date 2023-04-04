@@ -15,8 +15,8 @@ def parse_args(args: list = None) -> argparse.Namespace:
     script_name = Path(__file__).stem
     parser = argparse.ArgumentParser(
         prog=script_name,
-        description="Read data from Arduino",
-        epilog=f"{script_name} --batch-length 12 --output-path /home/pi/weather",
+        description="Read saved data and display it using Plotly",
+        epilog=f"{script_name} --input-path /home/pi/weather",
     )
 
     def validate_path(path: str) -> Path:
@@ -30,7 +30,7 @@ def parse_args(args: list = None) -> argparse.Namespace:
         "--input-path",
         type=validate_path,
         default=Path("/home/pi/weather"),
-        help="Path to write output files",
+        help="Path to read the data files from",
     )
     args = parser.parse_args(args)
     return args
