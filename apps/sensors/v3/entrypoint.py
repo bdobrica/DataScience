@@ -1,22 +1,48 @@
 #!/usr/bin/env python3
 import argparse
 import atexit
+import logging
 import os
 import signal
 import subprocess
 import types
 from pathlib import Path
 
+from logger import init_logger
+
 SCRIPT_NAME = Path(__file__).stem
+
 children_pids = []
+logger = init_logger(SCRIPT_NAME)
+
+
+def graceful_exit() -> None:
+    """Gracefully exit all child processes when exiting"""
+    for child_pid in children_pids:
+        try:
+            os.kill(child_pid, signal.SIGQUIT)
+        except ProcessLookupError:
+            pass
+
+
+def handle_signal(signum: int, frame: types.FrameType) -> None:
+    """
+    Handle signals received from child processes. When a child process exits,
+    it sends a signal to the parent process and the parent process exits killing
+    all the child processes.
+    :param signum: Signal number (not used)
+    :param frame: Current stack frame (not used)
+    """
+    graceful_exit()
+    exit(0)
 
 
 def parse_args(args: list) -> argparse.Namespace:
     """Parse command line arguments"""
     parser = argparse.ArgumentParser(
         prog=SCRIPT_NAME,
-        description="Read data from Arduino serial port in batches and upload it to Minio",
-        epilog=f"Example usage:\n{SCRIPT_NAME} --batch-length 12 --output-path /opt/sensors/data",
+        description="Orchestrate reading data from Arduino serial port in batches and upload it to Minio",
+        epilog=f"Example usage:\n{SCRIPT_NAME} --rows-per-file 10 --files-per-upload 60 --files-to-keep 60",
     )
 
     def validate_path(path: str) -> Path:
@@ -29,7 +55,7 @@ def parse_args(args: list) -> argparse.Namespace:
         "-r",
         "--rows-per-file",
         type=int,
-        default=12,
+        default=100,
         help="Number of records to read in a batch and store them in a temporart CSV file",
     )
     parser.add_argument(
@@ -54,30 +80,9 @@ def parse_args(args: list) -> argparse.Namespace:
         help="Path to temporary store the data in files",
     )
     args = parser.parse_args(args)
-    if not args.output_path.exists():
-        args.output_path.mkdir(parents=True, exist_ok=True)
+    if not args.data_path.exists():
+        args.data_path.mkdir(parents=True, exist_ok=True)
     return args
-
-
-def graceful_exit() -> None:
-    """Gracefully exit all child processes when exiting"""
-    for child_pid in children_pids:
-        try:
-            os.kill(child_pid, signal.SIGQUIT)
-        except ProcessLookupError:
-            pass
-
-
-def handle_signal(signum: int, frame: types.FrameType) -> None:
-    """
-    Handle signals received from child processes. When a child process exits,
-    it sends a signal to the parent process and the parent process exits killing
-    all the child processes.
-    :param signum: Signal number (not used)
-    :param frame: Current stack frame (not used)
-    """
-    graceful_exit()
-    exit(0)
 
 
 def main(args: list = None) -> None:
@@ -105,7 +110,13 @@ def main(args: list = None) -> None:
             ]
         ).pid
     )
+    while True:
+        pass
 
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except KeyboardInterrupt:
+        logger.info("Received SIGINT. Exiting ...")
+        graceful_exit()

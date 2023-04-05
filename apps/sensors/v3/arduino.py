@@ -2,7 +2,6 @@
 import argparse
 import atexit
 import datetime
-import logging
 import os
 import signal
 import time
@@ -11,12 +10,48 @@ from pathlib import Path
 
 import pandas as pd
 import serial
+from logger import init_logger
 
 SCRIPT_NAME = Path(__file__).stem
-SERIAL_PORT = Path(os.getenv("SERIAL_PORT", "/dev/ttyUSB0"))
 WAITING_TIME = float(os.getenv("WAITING_TIME", 5))
 
-logger = logging.getLogger(Path(__file__).stem)
+logger = init_logger(SCRIPT_NAME)
+serial_port = None
+
+
+def detect_usb_serial_port():
+    """Detect USB serial port and set serial_port variable to its path"""
+    global serial_port
+
+    if serial_port and serial_port.exists():
+        return
+
+    logger.info("Start detecting USB serial port ...")
+    ports = list(Path("/dev").glob("ttyUSB*"))
+    if not ports:
+        logger.warning("No USB serial ports found ...")
+        serial_port = None
+        return
+    if len(ports) == 1:
+        serial_port = ports[0]
+        logger.info(f"Found USB serial port {serial_port} ...")
+        return
+
+    logger.info(f"Multiple USB serial port candidates {len(ports)} ...")
+
+    for potential_port in ports:
+        try:
+            with serial.Serial(potential_port.as_posix(), timeout=1):
+                pass
+            serial_port = potential_port
+        except serial.SerialException:
+            continue
+        if serial_port:
+            break
+    if serial_port:
+        logger.info(f"Found USB serial port {serial_port} ...")
+    else:
+        logger.warning(f"No USB serial ports found ...")
 
 
 def read_serial_once(df: pd.DataFrame) -> pd.DataFrame:
@@ -25,19 +60,27 @@ def read_serial_once(df: pd.DataFrame) -> pd.DataFrame:
     :param df: Dataframe to append data to
     :return: Dataframe with new data (same instance as passed as argument)
     """
-    if not SERIAL_PORT.exists():
-        logger.warning(f"Serial port {SERIAL_PORT} does not exist")
+    global serial_port
+
+    detect_usb_serial_port()
+
+    if serial_port is None or not serial_port.exists():
+        logger.warning("No serial port found. Skip reading ...")
+        serial_port = None
+        time.sleep(WAITING_TIME)
         return df
 
     try:
-        with serial.Serial(SERIAL_PORT.as_posix(), timeout=1) as fp:
-            logger.info(f"Opened serial port {SERIAL_PORT}. Waiting {WAITING_TIME} seconds...")
+        with serial.Serial(serial_port.as_posix(), timeout=1) as fp:
+            logger.info(f"Opened serial port {serial_port}. Waiting {WAITING_TIME} seconds...")
             time.sleep(WAITING_TIME)
             fp.write("r".encode("ascii"))
             data = fp.readline().decode("ascii").strip()
         df.loc[len(df)] = [datetime.datetime.now()] + [float(value) for value in data.split(",")]
     except serial.SerialException:
-        logger.warning(f"Could not read data from serial port {SERIAL_PORT}. Error:\n {traceback.format_exc()}")
+        logger.warning(f"Could not read data from serial port {serial_port}. Error:\n {traceback.format_exc()}")
+        time.sleep(WAITING_TIME)
+        serial_port = None
     return df
 
 
@@ -74,6 +117,11 @@ def read_serial_batch(path: Path, batch_length: int) -> None:
         logger.warning("No data was read from serial port")
 
 
+def signal_parent() -> None:
+    """Send signal to parent process when exiting so that it knows we are done"""
+    os.kill(os.getppid(), signal.SIGUSR1)
+
+
 def parse_args(args: list) -> argparse.Namespace:
     """Parse command line arguments"""
     parser = argparse.ArgumentParser(
@@ -108,15 +156,11 @@ def parse_args(args: list) -> argparse.Namespace:
     return args
 
 
-def signal_parent() -> None:
-    """Send signal to parent process when exiting so that it knows we are done"""
-    os.kill(os.getppid(), signal.SIGUSR1)
-
-
 def main(args: list = None) -> None:
     """Main function"""
     atexit.register(signal_parent)
     args = parse_args(args)
+
     while True:
         read_serial_batch(path=args.output_path, batch_length=args.batch_length)
 
