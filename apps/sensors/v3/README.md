@@ -8,6 +8,8 @@ The application is composed of four parts:
 - a Python script that checks the data received, packs it in batches and uploads them to a Minio server `uploader.py`;
 - a Python script that orchestrates the other three scripts `entrypoint.py`.
 
+The components are communicating with each other through SIGUSR1 signals so that when one component needs to stop, it sends a SIGUSR1 signal to the orchestrator, which in turn sends a SIGQUIT signals to the other components to terminate them, after which it will exit.
+
 ## Build and Run
 
 Building the application is pretty straight forward. The only thing that you need to chose is the name of the container - `arduino-rpi4-sensors` in the example below. To build the application, run the following command:
