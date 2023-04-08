@@ -40,7 +40,7 @@ def parse_args(args: list = None) -> argparse.Namespace:
 
 
 def get_data() -> pd.DataFrame:
-    csv_files = app.config["input_path"].glob("*.csv")
+    csv_files = list(app.config["input_path"].glob("*.csv"))
     df = pd.concat([pd.read_csv(csv_path) for csv_path in csv_files])
     df.sort_values(by="datetime", inplace=True)
     logger.info(f"Read {len(df)} rows from {len(csv_files)} files")
