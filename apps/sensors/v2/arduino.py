@@ -13,7 +13,9 @@ def read_serial_once(df: pd.DataFrame) -> pd.DataFrame:
         time.sleep(5)  # Arduino gets reset when port is opened
         fp.write("r".encode("ascii"))
         data = fp.readline().decode("ascii").strip()
-    df.loc[len(df)] = [datetime.datetime.now()] + [float(value) for value in data.split(",")]
+    df.loc[len(df)] = [datetime.datetime.now()] + [
+        float(value) for value in data.split(",")
+    ]
     return df
 
 

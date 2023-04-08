@@ -50,7 +50,7 @@ def get_data() -> pd.DataFrame:
 @app.route("/")
 def index():
     selected = [DEFAULT_FEATURE]
-    df = get_data(selected)
+    df = get_data()
     fig = px.line(df, x="datetime", y=selected)
     graph = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
     return render_template(
