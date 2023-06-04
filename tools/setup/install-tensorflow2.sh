@@ -1,5 +1,6 @@
 #!/bin/bash
-ADDED_ENV="no"
+TENSORFLOW_VENV="python-tf2"
+ADDED_VENV="no"
 
 ## Install dependencies
 sudo apt-get -y install gfortran
@@ -36,14 +37,22 @@ rm -Rf Python-3.7.14*
 ## Update to the latest PIP for Python3.7
 python3.7 -m pip install -U pip
 
-## Create a python-tf virtual environment
-if [ ! -d ~/.venvs/python-tf2 ]; then
-	python3.7 -m venv ~/.venvs/python-tf2
-	ADDED_ENV="yes"
+## Create a TENSORFLOW_VENV virtual environment
+if [ ! -d ~/.venvs ]; then
+    mkdir -p ~/.venvs
+fi
+
+if [ ! -f ~/.venvs/${TENSORFLOW_VENV}/bin/activate ]; then
+    if [ -d ~/.venvs/${TENSORFLOW_VENV} ]; then
+        rm -rf ~/.venvs/${TENSORFLOW_VENV}
+    fi
+    ## Create a virtual environment for OpenCV
+    python3.7 -m venv ~/.venvs/${TENSORFLOW_VENV}
+    ADDED_VENV="yes"
 fi
 
 ## How to use a virtual environment: this will activate the environment
-source ~/.venvs/python-tf2/bin/activate
+source ~/.venvs/${TENSORFLOW_VENV}/bin/activate
 ## Uninstall existing tensorflow (if exists)
 pip3 uninstall tensorflow
 
@@ -93,7 +102,7 @@ sudo rm /var/swap.1
 
 
 ## Add the virtual environment to jupyter notebook
-if [ "${ADDED_ENV}" == "yes" ]; then
+if [ "${ADDED_VENV}" == "yes" ]; then
 	python3 -m ipykernel install --user --name=python-tf2
 fi
 

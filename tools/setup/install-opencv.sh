@@ -1,4 +1,5 @@
 #!/bin/bash
+OPENCV_VENV="OPENCV_VENV"
 ADDED_VENV="no"
 
 ## Install various dependencies: build tools (compiles and libraries), also image and video libraries
@@ -18,24 +19,31 @@ sudo apt-get install -y libssl-dev libffi-dev
 ## Install Python specific dependencies
 sudo apt-get install -y python3-dev python3-picamera
 
-if [ ! -d ~/.venvs/python-opencv ]; then
+if [ ! -d ~/.venvs ]; then
+    mkdir -p ~/.venvs
+fi
+
+if [ ! -f ~/.venvs/${OPENCV_VENV}/bin/activate ]; then
+    if [ -d ~/.venvs/${OPENCV_VENV} ]; then
+        rm -rf ~/.venvs/${OPENCV_VENV}
+    fi
     ## Create a virtual environment for OpenCV
-    python3 -m venv ~/.venvs/python-opencv
+    python3 -m venv ~/.venvs/${OPENCV_VENV}
     ADDED_VENV="yes"
 fi
 
 ## Activate the opencv-python virtual environment
-source ~/.venvs/python-opencv/bin/activate
+source ~/.venvs/${OPENCV_VENV}/bin/activate
 ## Install the OpenCV library. This specific version is the only one I was able to quickly install
-pip3 install opencv-contrib-python-headless==4.6.0.66
+pip3 install opencv-contrib-python-headless
 ## Install matplotlib which will help in displaying the images
 pip3 install matplotlib
-## Deactivate the python-opencv virtual environment
+## Deactivate the OPENCV_VENV virtual environment
 deactivate
 
 ## Add the virtual environment to jupyter notebook
 if [ "${ADDED_VENV}" == "yes" ]; then
-    python3 -m ipykernel install --user --name=python-opencv
+    python3 -m ipykernel install --user --name=OPENCV_VENV
 fi
 
 ## Fix the Jupyer Notebook problem with VENVs
