@@ -103,7 +103,7 @@ sudo rm /var/swap.1
 
 ## Add the virtual environment to jupyter notebook
 if [ "${ADDED_VENV}" == "yes" ]; then
-	python3 -m ipykernel install --user --name=python-tf2
+	python3 -m ipykernel install --user --name=${TENSORFLOW_VENV}
 fi
 
 ## Fix the Jupyer Notebook problem with VENVs

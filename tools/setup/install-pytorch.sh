@@ -29,7 +29,7 @@ deactivate
 
 ## Add the virtual environment to jupyter notebook
 if [ "${ADDED_VENV}" == "yes" ]; then
-    python3 -m ipykernel install --user --name=OPENCV_VENV
+    python3 -m ipykernel install --user --name=${PYTHORCH_VENV}
 fi
 
 ## Fix the Jupyer Notebook problem with VENVs
