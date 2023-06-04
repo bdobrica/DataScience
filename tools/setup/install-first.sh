@@ -2,6 +2,8 @@
 
 ## Update the software catalogue
 sudo apt-get update
+## Upgrade the software
+sudo apt-get upgrade -y
 ## Install some common tools
 sudo apt-get install -y git vim screen socat unzip wget
 ## Install pip for Python (the Python package manager) and the Python virtual environment
