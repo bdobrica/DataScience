@@ -12,7 +12,7 @@ sudo apt-get install -y python3-pip python3-venv
 sudo python3 -m pip install -U pip numpy notebook
 
 ## Create a hidden folder in the pi home directory to store the virtual environments
-if [ !-d ~/.venvs ]; then
+if [ ! -d ~/.venvs ]; then
     mkdir -p ~/.venvs
 fi
 
