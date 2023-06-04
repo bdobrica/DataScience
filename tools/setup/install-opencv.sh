@@ -1,5 +1,5 @@
 #!/bin/bash
-OPENCV_VENV="OPENCV_VENV"
+OPENCV_VENV="python-opencv"
 ADDED_VENV="no"
 
 ## Install various dependencies: build tools (compiles and libraries), also image and video libraries
@@ -43,7 +43,7 @@ deactivate
 
 ## Add the virtual environment to jupyter notebook
 if [ "${ADDED_VENV}" == "yes" ]; then
-    python3 -m ipykernel install --user --name=OPENCV_VENV
+    python3 -m ipykernel install --user --name=${OPENCV_VENV}
 fi
 
 ## Fix the Jupyer Notebook problem with VENVs
