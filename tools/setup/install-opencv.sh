@@ -11,13 +11,14 @@ sudo apt-get install -y libfontconfig1-dev libcairo2-dev
 sudo apt-get install -y libgdk-pixbuf2.0-dev libpango1.0-dev
 sudo apt-get install -y libgtk2.0-dev libgtk-3-dev
 sudo apt-get install -y libatlas-base-dev gfortran
+sudo apt-get install -y liblapack-dev liblapacke-dev libopenblas-dev
 sudo apt-get install -y libhdf5-dev libhdf5-serial-dev libhdf5-103
-sudo apt-get install -y libqtgui4 libqtwebkit4 libqt4-test python3-pyqt5
 sudo apt-get install -y libilmbase-dev libopenexr-dev libgstreamer1.0-dev
-sudo apt-get install -y libssl-dev libffi-dev
+sudo apt-get install -y libgstreamer-plugins-base1.0-dev
+sudo apt-get install -y libssl-dev libffi-dev libgflags-dev protobuf-compiler
 
 ## Install Python specific dependencies
-sudo apt-get install -y python3-dev python3-picamera
+sudo apt-get install -y python3-dev
 
 if [ ! -d ~/.venvs ]; then
     mkdir -p ~/.venvs
