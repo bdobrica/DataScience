@@ -7,11 +7,11 @@ from picamera2 import Picamera2
 
 
 class PiVideoStream:
-    def __init__(self, resolution: Tuple[int, int] = (640, 480), framerate: int = 32) -> None:
+    def __init__(self, resolution: Tuple[int, int] = (640, 480)) -> None:
         self.camera = Picamera2()
 
-        self.config = self.camera.create_preview_configuration(size=resolution, fps=framerate)
-        self.camera.config(self.config)
+        self.config = self.camera.create_preview_configuration(main={"size": resolution})
+        self.camera.configure(self.config)
         self.frame = None
         self.stopped = False
 
@@ -23,7 +23,7 @@ class PiVideoStream:
         return self
 
     def read(self) -> cv2.Mat:
-        return self.frame
+        return cv2.cvtColor(self.frame, cv2.COLOR_BGR2RGB)
 
     def update(self) -> None:
         while True:
