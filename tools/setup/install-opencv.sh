@@ -45,6 +45,15 @@ deactivate
 ## Add the virtual environment to jupyter notebook
 if [ "${ADDED_VENV}" == "yes" ]; then
     python3 -m ipykernel install --user --name=${OPENCV_VENV}
+
+    ## Copy the missing packages from the system to the virtual environment
+    VENV_SITE_PACKAGES=$(find ~/.venvs/${OPENCV_VENV} -name "site-packages" | head -n 1)
+    NEEDED_PACKAGES=( "pykms" "simplejpeg" "pidng" "piexif" "prctl" "v4l2" "libcamera" "picamera2" )
+    for NEEDED_PACKAGE in "${NEEDED_PACKAGES[@]}"; do
+        find /usr/lib/python3/dist-packages -maxdepth 1 -name "*${NEEDED_PACKAGE}*" | while read d; do
+            cp -r "$d" "${VENV_SITE_PACKAGES}/$(basename "$d")";
+        done
+    done
 fi
 
 ## Fix the Jupyer Notebook problem with VENVs
