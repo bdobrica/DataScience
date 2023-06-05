@@ -6,8 +6,9 @@ if [ ! -d ~/.venvs/${SECURITY_CAM_VENV} ]; then
 
     source ~/.venvs/${SECURITY_CAM_VENV}/bin/activate
 
-    pip3 install opencv-contrib-python-headless
-    pip3 install flask
+    python3 -m pip install opencv-contrib-python-headless
+    python3 -m pip install pillow
+    python3 -m pip install flask
 
     deactivate
 

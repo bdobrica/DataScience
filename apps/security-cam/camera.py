@@ -22,7 +22,7 @@ class PiVideoStream:
         t.start()
         return self
 
-    def read(self) -> cv2.Array:
+    def read(self) -> cv2.Mat:
         return self.frame
 
     def update(self) -> None:
