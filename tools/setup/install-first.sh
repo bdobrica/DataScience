@@ -9,7 +9,7 @@ sudo apt-get install -y git vim screen socat unzip wget
 ## Install pip for Python (the Python package manager) and the Python virtual environment
 sudo apt-get install -y python3-pip python3-venv
 ## Globally install numpy and jupyter notebook
-sudo python3 -m pip install -U pip numpy notebook
+sudo apt-get install -y python3-numpy python3-notebook
 
 ## Create a hidden folder in the pi home directory to store the virtual environments
 if [ ! -d ~/.venvs ]; then
