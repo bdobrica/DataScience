@@ -16,6 +16,7 @@ sudo apt-get install -y libhdf5-dev libhdf5-serial-dev libhdf5-103
 sudo apt-get install -y libilmbase-dev libopenexr-dev libgstreamer1.0-dev
 sudo apt-get install -y libgstreamer-plugins-base1.0-dev
 sudo apt-get install -y libssl-dev libffi-dev libgflags-dev protobuf-compiler
+sudo apt-get install -y python3-picamera2
 
 ## Install Python specific dependencies
 sudo apt-get install -y python3-dev
