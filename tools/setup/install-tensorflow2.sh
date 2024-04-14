@@ -84,8 +84,8 @@ gdown https://drive.google.com/uc?id=1QjsBN5fKAd-5gi01UqdeYpy9Wc0Gd8Fw
 pip3 install tensorflow-2.3.0-cp37-cp37m-linux_aarch64.whl
 ## And remove it, to not waste space
 rm tensorflow-2.3.0-cp37-cp37m-linux_aarch64.whl
-## Install the OpenCV library. This specific version is the only one I was able to quickly install
-pip3 install opencv-contrib-python-headless==4.6.0.66
+## Install the OpenCV library. I'll use only binary packages
+pip3 install --only-binary ":all:" opencv-contrib-python-headless
 ## Install matplotlib which will help in displaying the images
 pip3 install matplotlib
 ## Install dlib which will help with detecting face features
@@ -93,7 +93,7 @@ pip3 install dlib
 ## Install ipykernel
 pip3 install ipykernel
 
-## Deactivate the python-tf2 virtual environment
+## Deactivate the TENSORFLOW_VENV virtual environment
 deactivate
 
 ## Deactivate SWAP

@@ -6,7 +6,9 @@ if [ ! -d ~/.venvs/${SECURITY_CAM_VENV} ]; then
 
     source ~/.venvs/${SECURITY_CAM_VENV}/bin/activate
 
-    python3 -m pip install opencv-contrib-python-headless
+    # 4.5.5.64 is the latest version that works on Raspberry Pi 3
+    # Check here: https://www.piwheels.org/project/opencv-python-headless/
+    python3 -m pip install --only-binary ":all:" opencv-contrib-python-headless
     python3 -m pip install pillow
     python3 -m pip install flask
 

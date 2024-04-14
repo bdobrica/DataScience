@@ -19,9 +19,9 @@ fi
 source ~/.venvs/${PYTHORCH_VENV}/bin/activate
 
 ## Install the OpenCV library. This specific version is the only one I was able to quickly install
-pip3 install opencv-contrib-python-headless
+pip3 install --only-binary ":all:" opencv-contrib-python-headless
 ## Install PyTorch
-pip3 install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cpu
+pip3 install --only-binary ":all:" torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cpu
 ## Install matplotlib which will help in displaying the images
 pip3 install matplotlib
 ## Deactivate the PYTHORCH_VENV virtual environment
