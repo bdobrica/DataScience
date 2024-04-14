@@ -23,4 +23,14 @@ if [ ! -d ~/.venvs/${SECURITY_CAM_VENV} ]; then
             cp -r "$d" "${VENV_SITE_PACKAGES}/$(basename "$d")";
         done
     done
+
+    ## Copy the init.d script
+    sudo cp "$(dirname "${BASH_SOURCE[0]}")/security-cam" /etc/init.d/security-cam
+
+    ## Show the user the next steps
+    echo "The virtual environment ${SECURITY_CAM_VENV} was created and the OpenCV library was installed."
+    echo " * start the service by running: sudo service security-cam start"
+    echo " * access the service by opening a browser and going to: http://$(hostname -I | cut -d' ' -f1):8080"
+    echo " * find the PIN for the camera in "$(dirname "${BASH_SOURCE[0]}")"/config.ini"
+    echo " * processing camera frames can be done in camera.PiVideoStream.read method"
 fi
