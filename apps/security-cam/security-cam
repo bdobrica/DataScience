@@ -46,17 +46,19 @@ case "$1" in
 	log_daemon_msg "Starting ${DAEMON_NAME} service" "${PROC_CTRL}" || true
     log_daemon_msg "  -> activating python-security-cam virtual environment"
     source ~/.venvs/python-security-cam/bin-activate
-	if ( run_cmd $1 2>/dev/null ); then
+    log_daemon_msg "  -> running the security-cam.py script"
+	if ( run_cmd $1 ); then
 	    log_end_msg 0 || true
 	else
 	    log_end_msg 1 || true
 	fi
+    log_daemon_msg "  -> deactivating python-security-cam virtual environment"
     deactivate || true
 	;;
   stop)
 	log_daemon_msg "Stopping ${DAEMON_NAME} service" "${PROC_CTRL}" || true
     source ~/.venvs/python-security-cam/bin-activate
-	if ( run_cmd $1 2>/dev/null ); then
+	if ( run_cmd $1 ); then
 	    log_end_msg 0 || true
 	else
 	    log_end_msg 1 || true
@@ -67,7 +69,7 @@ case "$1" in
   reload|force-reload)
 	log_daemon_msg "Reloading ${DAEMON_NAME} service configuration" "${PROC_CTRL}" || true
     source ~/.venvs/python-security-cam/bin-activate
-	if ( run_cmd $1 2>/dev/null ); then
+	if ( run_cmd $1 ); then
 	    log_end_msg 0 || true
 	else
 	    log_end_msg 1 || true
@@ -78,7 +80,7 @@ case "$1" in
   restart)
 	log_daemon_msg "Restarting ${DAEMON_NAME} service" "${PROC_CTRL}" || true
     source ~/.venvs/python-security-cam/bin-activate
-	if ( run_cmd "stop" 2>/dev/null ); then
+	if ( run_cmd "stop" ); then
 	    log_end_msg 0 || true
 	else
 	    log_end_msg 1 || true
@@ -94,7 +96,7 @@ case "$1" in
   status)
 	echo ${EXPECTED_OUTPUT}
     #source ~/.venvs/python-security-cam/bin-activate
-	#( ${EXEC_BIN} status 2>/dev/null ) && exit 0 || exit $?
+	#( ${EXEC_BIN} status ) && exit 0 || exit $?
 	;;
 
   *)
