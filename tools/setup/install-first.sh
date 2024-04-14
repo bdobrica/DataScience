@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 
 ## Update the software catalogue
 sudo apt-get update

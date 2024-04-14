@@ -1,4 +1,6 @@
 #!/bin/bash
+set -e
+
 OPENCV_VENV="python-opencv"
 ADDED_VENV="no"
 

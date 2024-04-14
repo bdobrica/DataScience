@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 
 # update the package index
 sudo apt-get update

@@ -1,7 +1,12 @@
 #!/bin/bash
+set -e
+
 SECURITY_CAM_VENV="python-security-cam"
 
 if [ ! -d ~/.venvs/${SECURITY_CAM_VENV} ]; then
+    ## Create a virtual environment for OpenCV
+    echo "Creating the virtual environment ${SECURITY_CAM_VENV} and installing the OpenCV library"
+
 	python3 -m venv ~/.venvs/${SECURITY_CAM_VENV}
 
     source ~/.venvs/${SECURITY_CAM_VENV}/bin/activate
@@ -14,8 +19,9 @@ if [ ! -d ~/.venvs/${SECURITY_CAM_VENV} ]; then
 
     deactivate
 
-
     ## Copy the missing packages from the system to the virtual environment
+    echo "Copying the missing packages from the system to the virtual environment"
+
     VENV_SITE_PACKAGES=$(find ~/.venvs/${SECURITY_CAM_VENV} -name "site-packages" | head -n 1)
     NEEDED_PACKAGES=( "pykms" "simplejpeg" "pidng" "piexif" "prctl" "v4l2" "libcamera" "picamera2" )
     for NEEDED_PACKAGE in "${NEEDED_PACKAGES[@]}"; do
@@ -23,14 +29,17 @@ if [ ! -d ~/.venvs/${SECURITY_CAM_VENV} ]; then
             cp -r "$d" "${VENV_SITE_PACKAGES}/$(basename "$d")";
         done
     done
+fi
 
+if [ ! -f /etc/init.d/security-cam ]; then
     ## Copy the init.d script
     sudo cp "$(dirname "${BASH_SOURCE[0]}")/security-cam" /etc/init.d/security-cam
-
-    ## Show the user the next steps
-    echo "The virtual environment ${SECURITY_CAM_VENV} was created and the OpenCV library was installed."
-    echo " * start the service by running: sudo service security-cam start"
-    echo " * access the service by opening a browser and going to: http://$(hostname -I | cut -d' ' -f1):8080"
-    echo " * find the PIN for the camera in "$(dirname "${BASH_SOURCE[0]}")"/config.ini"
-    echo " * processing camera frames can be done in camera.PiVideoStream.read method"
 fi
+
+## Show the user the next steps
+echo "The virtual environment ${SECURITY_CAM_VENV} was created and the OpenCV library was installed."
+echo " * start the service by running: sudo service security-cam start"
+echo " * access the service by opening a browser and going to: http://$(hostname -I | cut -d' ' -f1):8080"
+echo " * find the PIN for the camera in "$(dirname "${BASH_SOURCE[0]}")"/config.ini"
+echo " * processing camera frames can be done in camera.PiVideoStream.read method"
+

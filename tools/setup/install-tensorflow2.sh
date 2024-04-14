@@ -1,4 +1,6 @@
 #!/bin/bash
+set -e
+
 TENSORFLOW_VENV="python-tf2"
 ADDED_VENV="no"
 

@@ -1,4 +1,6 @@
 #!/bin/bash
+set -e
+
 PYTHORCH_VENV="python-pytorch"
 ADDED_ENV="no"
 
