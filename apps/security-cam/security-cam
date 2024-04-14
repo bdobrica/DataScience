@@ -19,7 +19,7 @@ DAEMON_NAME="Security Camera Server"
 set -e
 
 run_cmd() {
-	if test -f ${CFG_PATH}; then
+	if test -n ${CFG_PATH} && test -f ${CFG_PATH}; then
 		su ${BOT_USER} -c "cd ${DIR_PATH} && ${BOT_PATH} --config ${CFG_PATH} $1"
 	else
 		su ${BOT_USER} -c "cd ${DIR_PATH} && ${BOT_PATH} $1"
@@ -44,6 +44,7 @@ fi
 case "$1" in
   start)
 	log_daemon_msg "Starting ${DAEMON_NAME} service" "${PROC_CTRL}" || true
+    log_daemon_msg "  -> activating python-security-cam virtual environment"
     source ~/.venvs/python-security-cam/bin-activate
 	if ( run_cmd $1 2>/dev/null ); then
 	    log_end_msg 0 || true
