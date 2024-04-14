@@ -37,7 +37,7 @@ fi
 ## Activate the opencv-python virtual environment
 source ~/.venvs/${OPENCV_VENV}/bin/activate
 ## Install the OpenCV library. This specific version is the only one I was able to quickly install
-pip3 install --only-bonary ":all:" opencv-contrib-python-headless
+pip3 install --only-binary ":all:" opencv-contrib-python-headless
 ## Install matplotlib which will help in displaying the images
 pip3 install matplotlib
 ## Deactivate the OPENCV_VENV virtual environment
