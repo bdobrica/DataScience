@@ -10,7 +10,7 @@
 ### END INIT INFO
 
 BOT_USER="pi"
-BOT_PATH="/home/pi/DataScience/apps/security-cam.py"
+BOT_PATH="/home/pi/DataScience/apps/security-cam/security-cam.py"
 DIR_PATH="${BOT_PATH%/*}"
 CFG_PATH=""
 EXPECTED_OUTPUT="security-cam"
@@ -30,9 +30,9 @@ PROC_CTRL=${0##*/}
 
 # /etc/init.d/security-cam: start and stop the Security Camera daemon
 
-test -d ${DIR_PATH} || exit 0
-test -x ${BOT_PATH} || exit 0
-( run_cmd 2>&1 | grep -q "${EXPECTED_OUTPUT}" ) 2>/dev/null || exit 0
+test -d ${DIR_PATH} || ( >2& echo "Directory not found: ${DIR_PATH}" && exit 1 )
+test -x ${BOT_PATH} || ( >2& echo "File not found: ${BOT_PATH}" && exit 1 )
+( run_cmd 2>&1 | grep -q "${EXPECTED_OUTPUT}" ) 2>/dev/null || ( >2& echo "Unexpected output from command ${BOT_PATH}" && exit 1 )
 
 umask 022
 
