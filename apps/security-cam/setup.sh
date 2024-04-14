@@ -34,6 +34,7 @@ fi
 if [ ! -f /etc/init.d/security-cam ]; then
     ## Copy the init.d script
     sudo cp "$(dirname "${BASH_SOURCE[0]}")/security-cam" /etc/init.d/security-cam
+    sudo systemctl daemon-reload
 fi
 
 ## Show the user the next steps
