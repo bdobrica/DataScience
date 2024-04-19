@@ -1,5 +1,5 @@
-# start from the python 3.9 slim buster base image
-FROM python:3.9-slim-buster
+# start from the python 3.9 slim bullseye base image
+FROM python:3.9-slim-bullseye
 
 # create the working directory (-p creates all parent directories)
 RUN mkdir -p /opt/sensors/templates
