@@ -41,7 +41,7 @@ def detect_usb_serial_port():
 
     for potential_port in ports:
         try:
-            with serial.Serial(potential_port.as_posix(), timeout=1):
+            with serial.Serial(potential_port.as_posix(), timeout=1, baudrate=115200):
                 pass
             serial_port = potential_port
         except serial.SerialException:
@@ -76,7 +76,7 @@ def read_serial_once(df: pd.DataFrame) -> pd.DataFrame:
             time.sleep(WAITING_TIME)
             fp.write("r".encode("ascii"))
             data = fp.readline().decode("ascii").strip()
-        df.loc[len(df)] = [datetime.datetime.now()] + [float(value) for value in data.split(",")]
+        df.loc[len(df)] = [datetime.datetime.now()] + [float(value or 0) for value in data.split(",")]
     except serial.SerialException:
         logger.warning(f"Could not read data from serial port {serial_port}. Error:\n {traceback.format_exc()}")
         time.sleep(WAITING_TIME)
